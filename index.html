@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="自然灾害天气资讯站 - 实时追踪全国台风、地震、洪水等各类灾害信息">
+<title>自然灾害天气资讯站 | 中国灾害应急信息平台</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="brand">
+      <span class="brand-icon">🌩️</span>
+      <div class="brand-text">
+        <h1>自然灾害天气资讯站</h1>
+        <p class="brand-subtitle">实时追踪 · 权威发布 · 应急救援</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span id="currentTime" class="current-time"></span>
+      <button id="themeToggle" class="theme-toggle" aria-label="切换主题">
+        <span class="theme-icon-sun">☀️</span>
+        <span class="theme-icon-moon">🌙</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="weather-overview-section">
+    <div class="weather-card" id="weatherCard">
+      <div class="weather-card-main">
+        <div class="weather-location">
+          <span class="weather-location-icon">📍</span>
+          <span id="weatherCity">北京市</span>
+          <button id="weatherRefresh" class="weather-refresh" aria-label="刷新天气">🔄</button>
+        </div>
+        <div class="weather-primary">
+          <div class="weather-temp-wrap">
+            <span id="weatherIcon" class="weather-icon">☀️</span>
+            <div class="weather-temp-info">
+              <div class="weather-temp"><span id="weatherTemp">28</span><span class="weather-unit">°C</span></div>
+              <div id="weatherDesc" class="weather-desc">晴转多云</div>
+            </div>
+          </div>
+          <div class="weather-feels">
+            <span class="weather-feels-label">体感</span>
+            <span class="weather-feels-value"><span id="weatherFeels">30</span>°C</span>
+          </div>
+        </div>
+      </div>
+      <div class="weather-card-details">
+        <div class="weather-detail-item">
+          <span class="weather-detail-icon">💧</span>
+          <div class="weather-detail-content">
+            <span class="weather-detail-label">湿度</span>
+            <span class="weather-detail-value"><span id="weatherHumidity">56</span>%</span>
+          </div>
+        </div>
+        <div class="weather-detail-item">
+          <span class="weather-detail-icon">🍃</span>
+          <div class="weather-detail-content">
+            <span class="weather-detail-label">风力</span>
+            <span class="weather-detail-value" id="weatherWind">东南风 3级</span>
+          </div>
+        </div>
+        <div class="weather-detail-item">
+          <span class="weather-detail-icon">🌫️</span>
+          <div class="weather-detail-content">
+            <span class="weather-detail-label">AQI 空气质量</span>
+            <span class="weather-detail-value aqi-level-<id>" id="weatherAqiWrap">
+              <span id="weatherAqi">72</span>
+              <span id="weatherAqiLabel">良</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-section">
+    <h2 class="section-title"><span class="title-bar"></span>统计仪表盘</h2>
+    <div class="dashboard-grid">
+      <div class="stat-card stat-total">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <div class="stat-label">本月灾害总数</div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-change" id="statTotalChange">同比 +0%</div>
+        </div>
+      </div>
+      <div class="stat-card stat-people">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <div class="stat-label">累计影响人口</div>
+          <div class="stat-value" id="statPeople">0</div>
+          <div class="stat-unit">人</div>
+        </div>
+      </div>
+      <div class="stat-card stat-loss">
+        <div class="stat-icon">💰</div>
+        <div class="stat-content">
+          <div class="stat-label">累计财产损失</div>
+          <div class="stat-value" id="statLoss">0</div>
+          <div class="stat-unit">百万元</div>
+        </div>
+      </div>
+      <div class="stat-card stat-ongoing">
+        <div class="stat-icon">🚨</div>
+        <div class="stat-content">
+          <div class="stat-label">进行中灾害</div>
+          <div class="stat-value" id="statOngoing">0</div>
+          <div class="stat-unit">起</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="type-stats-card">
+      <div class="type-stats-header">
+        <h3>各类型占比分析</h3>
+        <span class="type-stats-sub">本月共 <span id="typeTotalCount">0</span> 起灾害事件</span>
+      </div>
+      <div class="type-progress-list" id="typeProgressList">
+      </div>
+    </div>
+  </section>
+
+  <section class="filter-section">
+    <h2 class="section-title"><span class="title-bar"></span>灾害资讯筛选</h2>
+    
+    <div class="disaster-tabs" id="disasterTabs">
+      <button class="tab-btn active" data-type="all">
+        <span class="tab-icon">🌐</span>
+        <span class="tab-label">全部</span>
+      </button>
+      <button class="tab-btn disaster-typhoon" data-type="typhoon">
+        <span class="tab-icon">🌀</span>
+        <span class="tab-label">台风</span>
+      </button>
+      <button class="tab-btn disaster-earthquake" data-type="earthquake">
+        <span class="tab-icon">🌋</span>
+        <span class="tab-label">地震</span>
+      </button>
+      <button class="tab-btn disaster-flood" data-type="flood">
+        <span class="tab-icon">🌊</span>
+        <span class="tab-label">洪水</span>
+      </button>
+      <button class="tab-btn disaster-rainstorm" data-type="rainstorm">
+        <span class="tab-icon">⛈️</span>
+        <span class="tab-label">暴雨</span>
+      </button>
+      <button class="tab-btn disaster-snowstorm" data-type="snowstorm">
+        <span class="tab-icon">❄️</span>
+        <span class="tab-label">暴雪</span>
+      </button>
+      <button class="tab-btn disaster-drought" data-type="drought">
+        <span class="tab-icon">🏜️</span>
+        <span class="tab-label">干旱</span>
+      </button>
+      <button class="tab-btn disaster-wildfire" data-type="wildfire">
+        <span class="tab-icon">🔥</span>
+        <span class="tab-label">森林火灾</span>
+      </button>
+      <button class="tab-btn disaster-heatwave" data-type="heatwave">
+        <span class="tab-icon">🥵</span>
+        <span class="tab-label">高温</span>
+      </button>
+      <button class="tab-btn disaster-coldwave" data-type="coldwave">
+        <span class="tab-icon">🥶</span>
+        <span class="tab-label">寒潮</span>
+      </button>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-item filter-province">
+        <label for="provinceSelect">🌏 地区</label>
+        <select id="provinceSelect" class="filter-select">
+          <option value="">全国所有省份</option>
+          <option value="北京">北京</option>
+          <option value="上海">上海</option>
+          <option value="天津">天津</option>
+          <option value="重庆">重庆</option>
+          <option value="广东">广东</option>
+          <option value="广西">广西</option>
+          <option value="福建">福建</option>
+          <option value="浙江">浙江</option>
+          <option value="江苏">江苏</option>
+          <option value="山东">山东</option>
+          <option value="河北">河北</option>
+          <option value="河南">河南</option>
+          <option value="湖北">湖北</option>
+          <option value="湖南">湖南</option>
+          <option value="安徽">安徽</option>
+          <option value="江西">江西</option>
+          <option value="四川">四川</option>
+          <option value="贵州">贵州</option>
+          <option value="云南">云南</option>
+          <option value="陕西">陕西</option>
+          <option value="山西">山西</option>
+          <option value="甘肃">甘肃</option>
+          <option value="青海">青海</option>
+          <option value="宁夏">宁夏</option>
+          <option value="新疆">新疆</option>
+          <option value="西藏">西藏</option>
+          <option value="内蒙古">内蒙古</option>
+          <option value="黑龙江">黑龙江</option>
+          <option value="吉林">吉林</option>
+          <option value="辽宁">辽宁</option>
+          <option value="海南">海南</option>
+          <option value="台湾">台湾</option>
+          <option value="香港">香港</option>
+          <option value="澳门">澳门</option>
+        </select>
+      </div>
+
+      <div class="filter-item filter-time">
+        <label for="timeRange">📅 时间范围</label>
+        <select id="timeRange" class="filter-select">
+          <option value="all">全部时间</option>
+          <option value="7">近 7 天</option>
+          <option value="30">近 30 天</option>
+          <option value="180">近半年</option>
+        </select>
+      </div>
+
+      <div class="filter-item filter-search">
+        <label for="searchInput">🔍 搜索</label>
+        <div class="search-wrap">
+          <input type="text" id="searchInput" class="search-input" placeholder="搜索标题/地点/正文关键词">
+          <span class="search-icon">🔍</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-summary" id="filterSummary">
+      正在加载数据...
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="loading-state" id="loadingState">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">正在加载灾害资讯数据...</div>
+    </div>
+
+    <div class="error-state" id="errorState" style="display:none;">
+      <div class="error-icon">❌</div>
+      <div class="error-title">数据加载失败</div>
+      <div class="error-desc" id="errorDesc">网络异常，请稍后重试</div>
+      <button id="retryBtn" class="btn btn-primary">重新加载</button>
+    </div>
+
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <div class="empty-icon">📭</div>
+      <div class="empty-title">暂无匹配的资讯</div>
+      <div class="empty-desc">请尝试调整筛选条件或清除关键词搜索</div>
+      <button id="clearFiltersBtn" class="btn btn-outline">清空所有筛选条件</button>
+    </div>
+
+    <div class="cards-grid" id="cardsGrid">
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="detailModal" aria-hidden="true" role="dialog">
+  <div class="modal-mask" id="modalMask"></div>
+  <div class="modal-dialog" role="document">
+    <button class="modal-close" id="modalClose" aria-label="关闭弹窗">✕</button>
+    <div class="modal-content" id="modalContent">
+    </div>
+  </div>
+</div>
+
+<button id="backToTop" class="back-to-top" aria-label="回到顶部">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="brand-icon">🌩️</span>
+      <span>自然灾害天气资讯站</span>
+    </div>
+    <div class="footer-links">
+      <span>数据来源：各级政府应急管理部门</span>
+      <span>|</span>
+      <span>应急救援热线：<b>12350 / 119</b></span>
+    </div>
+    <div class="footer-copy">© 2026 Disaster Info Platform · 本站资讯仅供参考，具体以官方发布为准</div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>

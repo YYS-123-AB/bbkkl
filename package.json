@@ -1,0 +1,40 @@
+{
+  "name": "disaster-info-weather-station",
+  "version": "1.0.0",
+  "description": "自然灾害天气资讯站 - 纯前端项目，实时追踪台风/地震/洪水/暴雨/暴雪/干旱/森林火灾/高温/寒潮等各类灾害信息",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "fetch": "node scripts/fetch-data.js",
+    "start": "npx vite --host --port 5173 --open",
+    "dev": "npm run fetch && npx vite --host --port 5173 --open",
+    "build": "npx vite build --mode production",
+    "preview": "npx vite preview --host --port 4173"
+  },
+  "keywords": [
+    "disaster",
+    "weather",
+    "typhoon",
+    "earthquake",
+    "flood",
+    "rainstorm",
+    "emergency",
+    "frontend",
+    "vite",
+    "china"
+  ],
+  "author": "Disaster Info Platform",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
